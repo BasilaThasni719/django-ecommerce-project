@@ -14,23 +14,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path,include
-from rest_framework.authtoken.views import obtain_auth_token
-from django.conf.urls.static import static
-from django.conf import settings
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .import views
+from .views import ProductViewSet
 
+# Router for DRF ViewSet
+router = DefaultRouter()
+router.register(r'products', ProductViewSet, basename='product')
+
+# URL patterns for both HTML views and API
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Website UI routes (HTML pages)
+    path('', views.index, name='home'),
+    path('product_list', views.list_products, name='list_product'),
+    path('product_details/<pk>', views.detail_products, name='detail_product'),
 
-    # website views  
-    path('',include('products.urls')),
-    path('products/',include('products.urls')),
-    path('customers/',include('customers.urls')),
-    path('orders/', include('orders.urls')),
-
-    # login endpoint
-    path('api/login/', obtain_auth_token) # login api endpoint 
-
+    # API routes (automatically handled by router)
+    path('api/', include(router.urls)),
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #to locate static path to urlpatterns
+

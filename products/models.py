@@ -11,7 +11,7 @@ class Product(models.Model):
     image=models.ImageField(upload_to='media/')
     priority=models.IntegerField(default=0)
     delete_status=models.IntegerField(choices=DELETE_CHOICES,default=LIVE)
-    created_by=models.DateTimeField(auto_now_add=True)
+    created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
